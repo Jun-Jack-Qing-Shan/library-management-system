@@ -1,0 +1,91 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<h2>管理员仪表盘</h2>
+
+<div class="row mt-4">
+    <!-- 统计卡片 -->
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">总图书数</h5>
+                <p class="card-text display-4">{{ total_books }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">可借图书</h5>
+                <p class="card-text display-4">{{ available_books }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">已借出图书</h5>
+                <p class="card-text display-4">{{ borrowed_books }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">借阅统计</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        总借阅记录
+                        <span class="badge bg-primary rounded-pill">{{ total_loans }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        当前借阅中
+                        <span class="badge bg-warning rounded-pill">{{ active_loans }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        超期借阅
+                        <span class="badge bg-danger rounded-pill">{{ overdue_loans }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">最近借阅记录</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>书名</th>
+                            <th>借阅人</th>
+                            <th>借出日期</th>
+                            <th>应还日期</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for loan in recent_loans %}
+                        <tr>
+                            <td>{{ loan.book.title|truncatechars:20 }}</td>
+                            <td>{{ loan.borrower.user.username }}</td>
+                            <td>{{ loan.loan_date|date:"Y-m-d" }}</td>
+                            <td>{{ loan.due_back|date:"Y-m-d" }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

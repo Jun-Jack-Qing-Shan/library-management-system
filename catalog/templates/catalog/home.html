@@ -1,0 +1,30 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">欢迎使用图书馆管理系统</h1>
+    <p class="lead">系统正在建设中，以下是当前统计信息：</p>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">图书总数</h5>
+                    <p class="card-text display-4">{{ book_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">作者总数</h5>
+                    <p class="card-text display-4">{{ author_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a class="btn btn-primary btn-lg" href="{% url 'admin:index' %}" role="button">进入管理后台</a>
+    </div>
+</div>
+{% endblock %}

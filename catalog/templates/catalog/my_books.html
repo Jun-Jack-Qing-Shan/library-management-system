@@ -1,0 +1,80 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<h2>我的借阅</h2>
+
+{% if messages %}
+<div class="mb-4">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<h4 class="mt-4">当前借阅</h4>
+{% if current_loans %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>书名</th>
+            <th>借出日期</th>
+            <th>应还日期</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in current_loans %}
+        <tr>
+            <td>
+                <a href="{% url 'catalog:book-detail' loan.book.id %}">{{ loan.book.title }}</a>
+            </td>
+            <td>{{ loan.loan_date|date:"Y-m-d" }}</td>
+            <td>{{ loan.due_back|date:"Y-m-d" }}</td>
+            <td>
+                {% if loan.is_overdue %}
+                <span class="badge bg-danger">已超期</span>
+                {% else %}
+                <span class="badge bg-warning">借阅中</span>
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{% url 'catalog:return-book' loan.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-success">归还</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">您当前没有借阅任何图书</div>
+{% endif %}
+
+<h4 class="mt-4">历史借阅</h4>
+{% if past_loans %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>书名</th>
+            <th>借出日期</th>
+            <th>归还日期</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in past_loans %}
+        <tr>
+            <td>
+                <a href="{% url 'catalog:book-detail' loan.book.id %}">{{ loan.book.title }}</a>
+            </td>
+            <td>{{ loan.loan_date|date:"Y-m-d" }}</td>
+            <td>{{ loan.returned_date|date:"Y-m-d" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">暂无历史借阅记录</div>
+{% endif %}
+{% endblock %}

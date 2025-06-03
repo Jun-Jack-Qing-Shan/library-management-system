@@ -1,0 +1,45 @@
+{% extends "catalog/base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title text-center mb-4">图书搜索</h2>
+                <form method="get" action="{% url 'catalog:search' %}">
+                    <div class="input-group">
+                        <input type="text" class="form-control form-control-lg" 
+                               name="q" value="{{ query }}" 
+                               placeholder="输入书名、作者、ISBN或关键词...">
+                        <button class="btn btn-primary" type="submit">搜索</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        {% if query %}
+        <div class="mt-4">
+            <h4>搜索结果 ({{ books|length }}):</h4>
+            {% if books %}
+            <div class="list-group">
+                {% for book in books %}
+                <a href="{% url 'catalog:book-detail' book.pk %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ book.title }}</h5>
+                        <small class="text-muted">{{ book.get_status_display }}</small>
+                    </div>
+                    <p class="mb-1">
+                        <strong>作者:</strong> {{ book.author.name|default:"未知" }} | 
+                        <strong>ISBN:</strong> {{ book.isbn }}
+                    </p>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="alert alert-info">没有找到匹配的图书</div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
